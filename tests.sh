@@ -1,1 +1,1 @@
-#testeo de comandos
+#!/bin/bash
