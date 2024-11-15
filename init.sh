@@ -15,12 +15,12 @@ sudo bash definicion/main.sh
 # Creacion de grupos definidos en problematica trebol (acorde a archivos .list)
 sudo bash definicion/groups.sh
 
-#definir nuevo alias para creacion de nuevo usuario -> username y grupo (opciones acorde a archivos .list)
+# Definicion de nuevo alias para creacion usuarios.
 
-#crear usuarios definidos en problematica trebol
+# Creacion de usuarios definidos en problematica trebol
 sudo bash users/auto.sh
 
-#definir permisos de arbol y propietarios de directorios
+# Definicion de permisos de arbol y propietarios de directorios
 sudo bash definicion/own_perms.sh
 
 #
