@@ -3,8 +3,8 @@ source users/user_func.sh
 source trebol.conf
 
 sector_list() {
-    # Variables:
-    #     LISTS_PATH: Directorio donde se encuentran los listados0.
+    # Variables .conf:
+    #     DIR_LISTS_PATH: Directorio donde se encuentran los listados0.
     #     MAIN_GRP: Grupo Principal se excluirá del listado.
     #
     # Comandos Utilizados:
@@ -22,10 +22,10 @@ sector_list() {
     #             - -s, --suffix: elimina la extensión especificada (.list en este caso) de cada nombre de archivo.
     #
     # Salida:
-    #     Devuelve un array de nombres de archivos en el directorio LISTS_PATH que terminan en .list,
+    #     Devuelve un array de nombres de archivos en el directorio DIR_LISTS_PATH que terminan en .list,
     #     excluyendo el archivo cuyo nombre coincide con MAIN_GRP.
 
-    local nombres=($(ls "$LISTS_PATH"/*.list 2>/dev/null | grep -v "/$MAIN_GRP.list" | xargs -n 1 basename -s .list))
+    local nombres=($(ls "$DIR_LISTS_PATH"/*.list 2>/dev/null | grep -v "/$MAIN_GRP.list" | xargs -n 1 basename -s .list))
     echo "${nombres[@]}"
 }
 
@@ -78,6 +78,19 @@ elegir_sector() {
 }
 
 main() {
+    # Variables .conf:
+    #     MAIN_GRP: Grupo Principal.
+    # Tareas:
+    #     Obtiene la lista de sectores disponibles.
+    #     Solicita por entrada el nombre de usuario.
+    #     Solicita por entrada el sector al que se desea agregar el usuario. (lista de sectores disponibles)
+    #     Crea el usuario en el sistema.
+    #     Crea el usuario en la base de datos de Samba.
+    #     Agrega el usuario al sector principal (listado).
+    #     Agrega el usuario al sector elegido (listado).
+    #     Agrega el usuario al grupo principal.
+    #     Agrega el usuario al sector elegido.
+
     local sectores_disponibles=$((sector_list))
 
     local user

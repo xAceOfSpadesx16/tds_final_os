@@ -30,11 +30,11 @@ crear_usuario_linux() {
 
     local username=$1
     local password=$(generar_password_random)
-    sudo useradd -d "$HOME_PATH/$username" -m -U -s /bin/bash -k $SKEL_DIR $username
+    sudo useradd -d "$DIR_HOME_PATH/$username" -m -U -s /bin/bash -k $USE_SKEL $username
     sudo echo $username:$password | sudo chpasswd
 
     #registra los usuarios y contraseñas del sistema para fines didacticos
-    echo -e "Usuario: $username - Contraseña: $password\n" >>"$ETC_PASSWORDS_DIR/demo_linux_users.txt"
+    echo -e "Usuario: $username - Contraseña: $password\n" >>"$DIR_ETC_PATH/demo_linux_users.txt"
 }
 
 crear_usuario_samba() {
@@ -54,7 +54,7 @@ crear_usuario_samba() {
     ) | sudo smbpasswd -a $username >/dev/null 2>&1
 
     #registra los usuarios y contraseñas de la BBDD de Samba para fines didacticos
-    echo -e "Usuario: $username - Contraseña: $password\n" >>"$ETC_PASSWORDS_DIR/demo_samba_users.txt"
+    echo -e "Usuario: $username - Contraseña: $password\n" >>"$DIR_ETC_PATH/demo_samba_users.txt"
 
     if [[ $manual ]]; then
         echo "La contraseña asignada para su usuario es: $password" >&2
@@ -132,6 +132,6 @@ agregar_user_a_sector() {
     local username=$1
     local sector=$2
 
-    echo "$username" >>"$LISTS_PATH/$sector.list"
+    echo "$username" >>"$DIR_LISTS_PATH/$sector.list"
 
 }
