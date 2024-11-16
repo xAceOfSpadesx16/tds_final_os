@@ -60,7 +60,7 @@ crear_grp_dirs() {
     #         opciones:
     #             -p: crea los directorios padres si no existen.
 
-    local grupos=$(obtener_grupos_no_principales)
+    local grupos=($(obtener_grupos_no_principales))
     echo "Creando directorios de grupos."
     for grp in "${grupos[@]}"; do
 
