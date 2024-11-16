@@ -12,5 +12,5 @@ copiar_a_skel() {
     #             -r: copia recursivamente.
     #             -f: fuerza la copia, ignorando errores.
 
-    cp -rf "../skel/*" "$USE_SKEL"
+    cp -rf "skel/"* "$USE_SKEL"
 }

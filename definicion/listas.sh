@@ -11,5 +11,5 @@ copiar_listas() {
     #             -r: copia recursivamente.
     #             -f: fuerza la copia, ignorando errores.
 
-    cp -rf "../sectores/*" $DIR_LISTS_PATH
+    cp -rf "sectores/"* $DIR_LISTS_PATH
 }
