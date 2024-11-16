@@ -31,8 +31,11 @@ done
 
 # Actuar según la respuesta
 if [[ "$respuesta" == "s" ]]; then
+    echo "Actualizando paquetes..."
+    sudo apt update
+
     echo "Instalando paquetes..."
-    echo
+
     sudo apt install -y "${missing_packages[@]}"
 
     if [ $? -ne 0 ]; then

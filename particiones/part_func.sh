@@ -25,8 +25,11 @@ crear_particiones() {
     #         primary: define la particion como primaria.
     #         ext4: define el sistema de archivos como ext4.
     #
+    INICIO=0
     for i in $(seq 1 $CANT_PARTICIONES); do
-        sudo parted -s $DISCO mkpart primary ext4 $((i * PART_SIZE + 1))GB $((i * PART_SIZE + PART_SIZE))GB
+        FIN=$(($INICIO + $TAMANO_PARTICION))
+        sudo parted -s $DISCO mkpart primary ext4 ${INICIO}GB ${FIN}GB
+        INICIO=$FIN
     done
 }
 
