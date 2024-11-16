@@ -38,7 +38,7 @@ definir_owner_perms_grp_dirs() {
     #     chmod: cambia los permisos de un archivo o directorio.
     #     chown: cambia el propietario y el grupo de un archivo o directorio.
 
-    local grupos=$(obtener_grupos_no_principales)
+    local grupos=($(obtener_grupos_no_principales))
     for grp in "${grupos[@]}"; do
 
         # Asignar permisos
