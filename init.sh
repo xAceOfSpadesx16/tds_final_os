@@ -10,11 +10,11 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Check de paquetes requeridos
-sudo bash check_pack_req.sh
-if [ $? -ne 0 ]; then
-    exit 1
-fi
+# # Check de paquetes requeridos
+# sudo bash check_pack_req.sh
+# if [ $? -ne 0 ]; then
+#     exit 1
+# fi
 
 # Particionado de disco
 echo "Iniciando particionado de disco $DISCO."
