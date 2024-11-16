@@ -11,6 +11,12 @@ if [ ! -e "$DISCO" ]; then
     exit 1
 fi
 
+if [ ! -b "$DISCO" ]; then
+    echo "Error: El disco $DISCO no es un dispositivo de bloque valido."
+    echo "Ejecucion abortada, asegurese de que el disco sea un dispositivo de bloque valido."
+    exit 1
+fi
+
 # Verificar que CANT_PARTICIONES esté en el rango válido
 # Si la cantidad de particiones es menor a 1 o mayor a 4
 if [ "$CANT_PARTICIONES" -lt 1 ] || [ "$CANT_PARTICIONES" -gt 4 ]; then
@@ -50,10 +56,9 @@ if [ "$TAMANO_DISCO_GB" -lt "$ESPACIO_REQUERIDO" ]; then
 fi
 
 # Verificar si el disco tiene sistema de archivos
-# Si el disco es un dispositivo de bloque y tiene un sistema de archivos
-if [ -b "$DISCO" ] && sfdisk -l "$DISCO" >/dev/null 2>&1; then
-
-    echo "Advertencia: El disco $DISCO ya tiene un sistema de archivos."
+# Si el disco tiene una particion existente
+if parted -s "$DISCO" print 1 &>/dev/null; then
+    echo "Advertencia: El disco $DISCO ya tiene al menos una particion."
     echo "¿Desea sobrescribir las particiones existentes y crear nuevas? (s/n)"
     read -r overwrite
 
