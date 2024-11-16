@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source trebol.conf
-
+source utils.sh
 obtener_grupos_no_principales() {
     # Variables .conf:
     #     DIR_LISTS_PATH: Directorio donde se encuentran los listados.
@@ -39,12 +39,14 @@ crear_conf_dirs() {
     #     mkdir: crea directorios.
     #         opciones:
     #             -p: crea los directorios padres si no existen.
-
+    echo "Creando directorios definidos en trebol.conf." >&2
     for dir_info in "${CREATE_DIRS[@]}"; do
         IFS=":" read -r path permisos propietario grupo <<<"$dir_info"
 
-        # Crear directorio
+        echo "Creando directorio $path" >&2
         sudo mkdir -p "$path"
+
+        check_error $? "Error al crear el directorio $path"
 
     done
 }
@@ -59,8 +61,12 @@ crear_grp_dirs() {
     #             -p: crea los directorios padres si no existen.
 
     local grupos=$(obtener_grupos_no_principales)
+    echo "Creando directorios de grupos."
     for grp in "${grupos[@]}"; do
+
+        echo "Creando directorio $DIR_ROOT_PATH/$grp"
         sudo mkdir -p "$DIR_ROOT_PATH/$grp"
+        check_error $? "Error al crear el directorio $DIR_ROOT_PATH/$grp"
 
     done
 }

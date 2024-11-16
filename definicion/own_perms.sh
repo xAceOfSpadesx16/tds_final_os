@@ -19,11 +19,14 @@ definir_owner_perms_conf_dirs() {
     for dir_info in "${CREATE_DIRS[@]}"; do
         IFS=":" read -r path permisos propietario grupo <<<"$dir_info"
 
+        echo "Definiendo permisos $permisos y propietario $propietario:$grupo a $path"
+
         # Asignar permisos
         sudo chmod "$permisos" "$path"
 
         # Asignar propietario y grupo
         sudo chown "$propietario:$grupo" "$path"
+
     done
 }
 

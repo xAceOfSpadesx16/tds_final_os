@@ -1,6 +1,6 @@
 #!/bin/bash
 source trebol.conf
-
+source utils.sh
 generar_password_random() {
     # Comandos Utilizados:
     #     tr: realiza una traducción o eliminación de caracteres en una entrada. (filtrado)
@@ -30,11 +30,17 @@ crear_usuario_linux() {
 
     local username=$1
     local password=$(generar_password_random)
+    echo "Creando usuario $username en el sistema." >&2
     sudo useradd -d "$DIR_HOME_PATH/$username" -m -U -s /bin/bash -k $USE_SKEL $username
     sudo echo $username:$password | sudo chpasswd
 
+    error=$(check_error $? "Error al crear el usuario $username en el sistema.")
+
+    if [[ $error -eq 1 ]]; then
+        echo -e "Usuario: $username - Contraseña: $password\n" >>"$DIR_ETC_PATH/demo_linux_users.txt"
+    fi
+
     #registra los usuarios y contraseñas del sistema para fines didacticos
-    echo -e "Usuario: $username - Contraseña: $password\n" >>"$DIR_ETC_PATH/demo_linux_users.txt"
 }
 
 crear_usuario_samba() {
@@ -47,18 +53,23 @@ crear_usuario_samba() {
 
     local username=$1
     local manual=$2
-    local password=$(generar_random_password)
+    local password=$(generar_password_random)
+    echo "Creando usuario $username en BBDD de Samba." >&2
     (
         echo "$password"
         echo "$password"
     ) | sudo smbpasswd -a $username >/dev/null 2>&1
 
-    #registra los usuarios y contraseñas de la BBDD de Samba para fines didacticos
-    echo -e "Usuario: $username - Contraseña: $password\n" >>"$DIR_ETC_PATH/demo_samba_users.txt"
+    error=$(check_error $? "Error al crear el usuario $username en la BBDD de Samba.")
 
-    if [[ $manual ]]; then
-        echo "La contraseña asignada para su usuario es: $password" >&2
+    if [[ $error -eq 1 ]]; then
+        echo -e "Usuario: $username - Contraseña: $password\n" >>"$DIR_ETC_PATH/demo_samba_users.txt"
+        if [[ $manual ]]; then
+            echo "La contraseña asignada para su usuario es: $password" >&2
+        fi
+
     fi
+
 }
 
 agregar_a_grp() {
@@ -72,7 +83,10 @@ agregar_a_grp() {
 
     local group=$1
     local username=$2
+    echo "Agregando $username al grupo $group." >&2
     sudo usermod -aG "$group" "$username"
+    check_error $? "Error al agregar $username al grupo $group"
+
 }
 
 agregar_a_grp_por_listados() {
@@ -107,7 +121,9 @@ agregar_a_grp_por_listados() {
         if grep -q "^$username$" "$file"; then
 
             if ! getent group "$group_name" >/dev/null; then
+                echo "Creando grupo $group_name en el sistema." >&2
                 sudo groupadd "$group_name"
+                check_error $? "Error al crear el grupo $group_name en el sistema."
             fi
 
             agregar_a_grp "$group_name" "$username"
@@ -131,7 +147,7 @@ agregar_user_a_sector() {
 
     local username=$1
     local sector=$2
-
+    echo "Agregando $username al listado $sector.list" >&2
     echo "$username" >>"$DIR_LISTS_PATH/$sector.list"
 
 }
