@@ -3,7 +3,6 @@
 source trebol.conf
 source definicion/skel.sh
 source definicion/directorios.sh
-source definicion/permisos.sh
 source definicion/listas.sh
 
 main() {
