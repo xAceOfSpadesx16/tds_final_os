@@ -4,7 +4,9 @@ check_error() {
     if [ "$error" -ne 0 ]; then
         echo "Error: $mensaje" >&2
         echo 0
+        return 0
     fi
     echo 1
+    return 1
 
 }

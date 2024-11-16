@@ -32,7 +32,7 @@ crear_usuario_linux() {
     local password=$(generar_password_random)
     echo "Creando usuario $username en el sistema." >&2
     sudo useradd -d "$DIR_HOME_PATH/$username" -m -U -s /bin/bash -k $USE_SKEL $username
-    sudo echo $username:$password | sudo chpasswd
+    echo $username:$password | sudo chpasswd
 
     error=$(check_error $? "Error al crear el usuario $username en el sistema.")
 
