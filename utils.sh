@@ -1,3 +1,6 @@
+#!/bin/bash
+source trebol.conf
+
 check_error() {
     local error=$1
     local mensaje=$2
@@ -8,5 +11,8 @@ check_error() {
     fi
     echo 1
     return 1
+}
 
+obtener_ip() {
+    ip -4 addr show $ADAPTADOR | grep -oP '(?<=inet\s)\d+(\.\d+){3}'
 }
