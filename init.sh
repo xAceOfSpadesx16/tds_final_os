@@ -10,6 +10,14 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# Preparacion de Servidor
+sudo bash preparacion/main.sh
+if [ $? -ne 0 ]; then
+    echo "Error al preparar el servidor, la instalacion ha sido abortada."
+    echo "Checkee el archivo ./preparacion/main.sh y la configuracion en trebol.conf"
+    exit 1
+fi
+
 # # Check de paquetes requeridos
 # sudo bash check_pack_req.sh
 # if [ $? -ne 0 ]; then
