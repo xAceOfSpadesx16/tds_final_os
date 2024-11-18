@@ -12,11 +12,12 @@ sudo chmod 750 "$NTPSIGND_PATH"
 echo
 
 echo "Modificando archivo /etc/chrony.conf..."
-sudo tee /etc/chrony.conf >/dev/null <<EOF
+sudo tee -a /etc/chrony.conf >/dev/null <<EOF
 bindcmdaddress $(obtener_ip)
 allow $(obtener_red)
 ntpsigndsocket $NTPSIGND_PATH
 EOF
+
 echo
 
 echo "Reiniciando el servicio chronyd..."
