@@ -16,3 +16,7 @@ check_error() {
 obtener_ip() {
     ip -4 addr show $ADAPTADOR | grep -oP '(?<=inet\s)\d+(\.\d+){3}'
 }
+
+obtener_red() {
+    ip addr show $ADAPTADOR | awk '/inet / {print $2}' | xargs -I{} ipcalc -n {} | awk '/Network/ {print $2}'
+}
