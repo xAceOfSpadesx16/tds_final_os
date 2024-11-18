@@ -12,9 +12,9 @@ sudo samba-tool domain provision \
     --server-role=$SERVER_ROLE \
     --dns-backend=$DNS_BACKEND \
     --adminpass=$ADMINISTRATOR_PASSWORD \
+    --dns-forwarder=$GOOGLE_DNS \
     --use-rfc2307
 # --interactive=no
-# --dns-forwarder=$GOOGLE_DNS \
 
 echo "Realm: $FQDN"
 echo "Domain: $DOMAIN"
