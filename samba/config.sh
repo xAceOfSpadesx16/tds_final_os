@@ -5,26 +5,27 @@ echo "Haciendo copia de seguridad de /etc/samba/smb.conf..."
 sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.bak
 echo
 
-echo "Definiendo provisionamiento de dominio..."
-sudo samba-tool domain provision \
-    --realm=$FQDN \
-    --domain=$DOMAIN \
-    --server-role=$SERVER_ROLE \
-    --dns-backend=$DNS_BACKEND \
-    --adminpass=$ADMINISTRATOR_PASSWORD \
-    --use-rfc2307
-# --dns-forwarder=$GOOGLE_DNS \
-# --interactive=no
-
+echo "Definir provisionamiento de dominio..."
 echo "Realm: $FQDN"
 echo "Domain: $DOMAIN"
 echo "Server Role: $SERVER_ROLE"
 echo "DNS backend: $DNS_BACKEND"
-# echo "DNS forwarder IP address: $GOOGLE_DNS"
+echo "DNS forwarder IP address: $GOOGLE_DNS"
 echo "Administrator password: $ADMINISTRATOR_PASSWORD"
 echo "No olvides cambiar la contraseña del administrador"
 echo "Comando: sudo samba-tool user setpassword administrator"
 echo
+
+sudo samba-tool domain provision
+# --realm=$FQDN \
+# --domain=$DOMAIN \
+# --server-role=$SERVER_ROLE \
+# --dns-backend=$DNS_BACKEND \
+# --adminpass=$ADMINISTRATOR_PASSWORD \
+# --use-rfc2307
+# --dns-forwarder=$GOOGLE_DNS \
+# --interactive=no
+
 if [ $? -ne 0 ]; then
     echo "Error al definir provisionamiento de dominio."
     echo "Checkee el archivo ./samba/config.sh y la configuracion en trebol.conf"
