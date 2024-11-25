@@ -12,7 +12,7 @@ generar_password_random() {
     #     opciones:
     #         -c, --bytes: limita la salida a un número específico de bytes.
 
-    tr -dc 'A-Za-z0-9' </dev/urandom | head -c 6
+    tr -dc 'A-Za-z0-9' </dev/urandom | head -c 8
 }
 
 crear_usuario_linux() {
@@ -30,9 +30,10 @@ crear_usuario_linux() {
 
     local username=$1
     local password=$(generar_password_random)
-    echo "Creando usuario $username en el sistema." >&2
-    sudo useradd -d "$DIR_HOME_PATH/$username" -m -U -s /bin/bash -k $USE_SKEL $username
-    echo $username:$password | sudo chpasswd
+    echo "Creando usuario $username." >&2
+    sudo samba-tool user create "$username" "$password"
+    # sudo useradd -d "$DIR_HOME_PATH/$username" -m -U -s /bin/bash -k $USE_SKEL $username
+    # echo $username:$password | sudo chpasswd
 
     error=$(check_error $? "Error al crear el usuario $username en el sistema.")
 

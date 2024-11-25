@@ -36,6 +36,12 @@ if [[ "$respuesta" == "s" ]]; then
 
     echo "Instalando paquetes..."
 
+    echo "krb5-config krb5-config/default_realm string $FQDN" | sudo debconf-set-selections
+    echo "krb5-config krb5-config/kerberos_servers string $NOMBRE_CONTROLLER.$NOMBRE_DOMINIO.$EXTENSION_DOMINIO" | sudo debconf-set-selections
+    echo "krb5-config krb5-config/admin_server string $NOMBRE_CONTROLLER.$NOMBRE_DOMINIO.$EXTENSION_DOMINIO" | sudo debconf-set-selections
+
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y krb5-config krb5-user
+
     sudo apt install -y "${missing_packages[@]}"
 
     if [ $? -ne 0 ]; then
