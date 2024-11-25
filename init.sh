@@ -47,20 +47,20 @@ echo -e "Configuracion de Samba finalizada.\n"
 # # Creacion de grupos definidos en problematica trebol (acorde a archivos .list)
 # echo "Definiendo grupos."
 
-# sudo bash definicion/groups.sh
+sudo bash definicion/groups.sh
 
-# echo -e "Definicion de Grupos finalizada.\n"
+echo -e "Definicion de Grupos finalizada.\n"
 
 # # Definicion de nuevo alias para creacion usuarios.
 
 # # Creacion de usuarios definidos en problematica trebol
-# echo "Creando usuarios de $empresa"
+echo "Creando usuarios de $empresa"
 
-# sudo bash users/auto.sh
+sudo bash users/auto.sh
 
-# echo -e "Creacion de Usuarios finalizada.\n"
+echo -e "Creacion de Usuarios finalizada.\n"
 
-# # Definicion de permisos de arbol y propietarios de directorios
+# # # Definicion de permisos de arbol y propietarios de directorios
 # echo "Definiendo propietarios y permisos."
 
 # sudo bash definicion/own_perms.sh

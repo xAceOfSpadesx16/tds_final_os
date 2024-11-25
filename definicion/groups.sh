@@ -22,16 +22,13 @@ obtener_grupos() {
 }
 
 crear_groups() {
-    # Comandos Utilizados:
-    #     getent: busca en las bases de datos del sistema.
-    #     opciones:
-    #         group: consulta el grupo en la base de datos de grupos.
-    #     groupadd: crea un nuevo grupo en el sistema.
 
     local grps=($(obtener_grupos))
     for i in "${grps[@]}"; do
-        if ! getent group "$i" >/dev/null 2>&1; then
-            sudo groupadd "$i"
+        if ! samba-tool group list | grep -qw "$i"; then
+            echo "Creando grupo $i." >&2
+            samba-tool group add "$i"
+            check_error $? "Error al crear el grupo $i."
         fi
     done
 }

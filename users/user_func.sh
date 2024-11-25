@@ -28,18 +28,16 @@ crear_usuario_linux() {
     #         -k, --skel: especifica un directorio de plantilla para el home del usuario.
     #    chpasswd: permite al administrador del sistema cambiar contraseñas de usuarios por lotes.
 
-    local username=$1
-    local password=$(generar_password_random)
-    echo "Creando usuario $username." >&2
-    sudo samba-tool user create "$username" "$password"
-    # sudo useradd -d "$DIR_HOME_PATH/$username" -m -U -s /bin/bash -k $USE_SKEL $username
-    # echo $username:$password | sudo chpasswd
+    # local username=$1
+    # local password=$(generar_password_random)
+    # echo "Creando usuario $username." >&2
+    # sudo samba-tool user create "$username" "$password" --home-directory "$DIR_HOME_PATH/$username"
 
-    error=$(check_error $? "Error al crear el usuario $username en el sistema.")
+    # error=$(check_error $? "Error al crear el usuario $username en el sistema.")
 
-    if [[ $error -eq 1 ]]; then
-        echo -e "Usuario: $username - Contraseña: $password\n" >>"$DIR_ETC_PATH/demo_linux_users.txt"
-    fi
+    # if [[ $error -eq 1 ]]; then
+    #     echo -e "Usuario: $username - Contraseña: $password\n" >>"$DIR_ETC_PATH/demo_linux_users.txt"
+    # fi
 
     #registra los usuarios y contraseñas del sistema para fines didacticos
 }
@@ -55,11 +53,7 @@ crear_usuario_samba() {
     local username=$1
     local manual=$2
     local password=$(generar_password_random)
-    echo "Creando usuario $username en BBDD de Samba." >&2
-    (
-        echo "$password"
-        echo "$password"
-    ) | sudo smbpasswd -a $username >/dev/null 2>&1
+    sudo samba-tool user create "$username" "$password" --home-directory "$DIR_HOME_PATH/$username"
 
     error=$(check_error $? "Error al crear el usuario $username en la BBDD de Samba.")
 
@@ -74,60 +68,41 @@ crear_usuario_samba() {
 }
 
 agregar_a_grp() {
-    # Parámetros:
-    #     1) group: nombre del grupo al que se agregará el usuario.
-    #     2) username: nombre del usuario que se agregará al grupo.
-    # Comandos Utilizados:
-    #     usermod: modifica los atributos de un usuario del sistema.
-    #     opciones:
-    #         -aG: agrega al usuario a un grupo sin removerlo de otros grupos.
-
     local group=$1
     local username=$2
-    echo "Agregando $username al grupo $group." >&2
-    sudo usermod -aG "$group" "$username"
-    check_error $? "Error al agregar $username al grupo $group"
 
+    if [[ -z "$group" || -z "$username" ]]; then
+        echo "Error: grupo o usuario no especificados." >&2
+        return 1
+    fi
+
+    echo "Agregando $username al grupo $group." >&2
+    samba-tool group addmembers "$group" "$username"
+    check_error $? "Error al agregar $username al grupo $group"
 }
 
 agregar_a_grp_por_listados() {
-    # Parámetros:
-    #     1) dir_path: ruta del directorio que contiene los archivos con extensión .list.
-    #     2) username: nombre del usuario que se agregará a grupos dependiendo del archivo que se encuentre.
-    #
-    # Comandos Utilizados:
-    #
-    #     grep: busca líneas en los archivos que coinciden con un patrón.
-    #         opciones:
-    #             -q: modo silencioso, solo verifica si hay coincidencia.
-    #
-    #     basename: obtiene solo el nombre del archivo, excluyendo el directorio y la extensión.
-    #
-    #     getent: busca en las bases de datos del sistema.
-    #     opciones:
-    #         group: consulta el grupo en la base de datos de grupos.
-    #
-    #     groupadd: crea un nuevo grupo en el sistema.
-
     local dir_path="$1"
     local username="$2"
 
     if [[ ! -d "$dir_path" ]]; then
+        echo "Error: el directorio $dir_path no existe o no es válido." >&2
         return 1
     fi
 
     for file in "$dir_path"/*.list; do
-        local group_name=$(basename "$file" .list)
+        if [[ -f "$file" ]]; then
+            local group_name=$(basename "$file" .list)
 
-        if grep -q "^$username$" "$file"; then
+            if grep -q "^$username$" "$file"; then
+                if ! samba-tool group list | grep -qw "$group_name"; then
+                    echo "Creando grupo $group_name en el servidor." >&2
+                    samba-tool group add "$group_name"
+                    check_error $? "Error al crear el grupo $group_name en el servidor."
+                fi
 
-            if ! getent group "$group_name" >/dev/null; then
-                echo "Creando grupo $group_name en el sistema." >&2
-                sudo groupadd "$group_name"
-                check_error $? "Error al crear el grupo $group_name en el sistema."
+                agregar_a_grp "$group_name" "$username"
             fi
-
-            agregar_a_grp "$group_name" "$username"
         fi
     done
 }
