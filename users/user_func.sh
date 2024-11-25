@@ -15,32 +15,32 @@ generar_password_random() {
     tr -dc 'A-Za-z0-9' </dev/urandom | head -c 8
 }
 
-crear_usuario_linux() {
-    # Parametros:
-    #     1) username
-    # Comandos Utilizados:
-    #     useradd: crea un nuevo usuario.
-    #     opciones:
-    #         -d, --home: especifica el path del directorio home del nuevo usuario.
-    #         -m, --create-home: crea el directorio home del usuario.
-    #         -U, --user-group: crea un grupo con el mismo nombre del usuario.
-    #         -s, --shell: especifica el shell del usuario.
-    #         -k, --skel: especifica un directorio de plantilla para el home del usuario.
-    #    chpasswd: permite al administrador del sistema cambiar contraseñas de usuarios por lotes.
+# crear_usuario_linux() {
+# Parametros:
+#     1) username
+# Comandos Utilizados:
+#     useradd: crea un nuevo usuario.
+#     opciones:
+#         -d, --home: especifica el path del directorio home del nuevo usuario.
+#         -m, --create-home: crea el directorio home del usuario.
+#         -U, --user-group: crea un grupo con el mismo nombre del usuario.
+#         -s, --shell: especifica el shell del usuario.
+#         -k, --skel: especifica un directorio de plantilla para el home del usuario.
+#    chpasswd: permite al administrador del sistema cambiar contraseñas de usuarios por lotes.
 
-    # local username=$1
-    # local password=$(generar_password_random)
-    # echo "Creando usuario $username." >&2
-    # sudo samba-tool user create "$username" "$password" --home-directory "$DIR_HOME_PATH/$username"
+# local username=$1
+# local password=$(generar_password_random)
+# echo "Creando usuario $username." >&2
+# sudo samba-tool user create "$username" "$password" --home-directory "$DIR_HOME_PATH/$username"
 
-    # error=$(check_error $? "Error al crear el usuario $username en el sistema.")
+# error=$(check_error $? "Error al crear el usuario $username en el sistema.")
 
-    # if [[ $error -eq 1 ]]; then
-    #     echo -e "Usuario: $username - Contraseña: $password\n" >>"$DIR_ETC_PATH/demo_linux_users.txt"
-    # fi
+# if [[ $error -eq 1 ]]; then
+#     echo -e "Usuario: $username - Contraseña: $password\n" >>"$DIR_ETC_PATH/demo_linux_users.txt"
+# fi
 
-    #registra los usuarios y contraseñas del sistema para fines didacticos
-}
+#registra los usuarios y contraseñas del sistema para fines didacticos
+# }
 
 crear_usuario_samba() {
     # Parámetros:
@@ -57,7 +57,7 @@ crear_usuario_samba() {
 
     error=$(check_error $? "Error al crear el usuario $username en la BBDD de Samba.")
 
-    if [[ $error -eq 1 ]]; then
+    if [[ $error -eq 0 ]]; then
         echo -e "Usuario: $username - Contraseña: $password\n" >>"$DIR_ETC_PATH/demo_samba_users.txt"
         if [[ $manual ]]; then
             echo "La contraseña asignada para su usuario es: $password" >&2
@@ -92,9 +92,10 @@ agregar_a_grp_por_listados() {
 
     for file in "$dir_path"/*.list; do
         if [[ -f "$file" ]]; then
-            local group_name=$(basename "$file" .list)
 
             if grep -q "^$username$" "$file"; then
+                local group_name=$(basename "$file" .list)
+
                 if ! samba-tool group list | grep -qw "$group_name"; then
                     echo "Creando grupo $group_name en el servidor." >&2
                     samba-tool group add "$group_name"

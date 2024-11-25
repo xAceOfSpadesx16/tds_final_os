@@ -10,7 +10,8 @@ sudo hostnamectl set-hostname $NOMBRE_CONTROLLER
 
 # Limpiando /etc/hosts
 echo "Limpiando /etc/hosts..."
-sudo sed -i "/127\.0\.0\.1\s\+$NOMBRE_CONTROLLER/d" /etc/hosts #elimina la linea 127.0.0.1 dc en caso de existir
+# sudo sed -i "/127\.0\.0\.1\s\+$NOMBRE_CONTROLLER/d" /etc/hosts #elimina la linea 127.0.0.1 dc en caso de existir
+sudo sed -i "/127\.0\.1\.1\s\+$NOMBRE_CONTROLLER/d" /etc/hosts #elimina la linea 127.0.1.1 dc en caso de existir
 
 # Definiendo la resolución de nombres local
 echo "Definiendo la resolución de nombres local en /etc/hosts..."
@@ -45,7 +46,7 @@ echo "Eliminando enlace simbólico de resolv.conf..."
 sudo unlink /etc/resolv.conf
 echo
 
-# Creando nuevo enlace simbólico de resolv.conf
+# Creando nuevo resolv.conf
 echo "Creando nuevo enlace simbólico de resolv.conf..."
 sudo tee /etc/resolv.conf >/dev/null <<EOF
 nameserver $ip

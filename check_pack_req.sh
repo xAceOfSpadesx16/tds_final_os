@@ -14,6 +14,7 @@ done
 # En caso de que todos los paquetes esten instalados finaliza el script correctamente
 if [ ${#missing_packages[@]} -eq 0 ]; then
     echo "Todos los paquetes ya están instalados."
+    echo "Recuerdo configurar correctamente Kerberos."
     exit 0
 fi
 

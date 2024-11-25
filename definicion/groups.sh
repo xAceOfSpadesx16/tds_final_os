@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source trebol.conf
+source utils.sh
 
 obtener_grupos() {
     # Variables .conf:
@@ -27,7 +28,7 @@ crear_groups() {
     for i in "${grps[@]}"; do
         if ! samba-tool group list | grep -qw "$i"; then
             echo "Creando grupo $i." >&2
-            samba-tool group add "$i"
+            sudo samba-tool group add "$i" >/dev/null 2>&1
             check_error $? "Error al crear el grupo $i."
         fi
     done

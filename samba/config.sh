@@ -17,14 +17,6 @@ echo "Comando: sudo samba-tool user setpassword administrator"
 echo
 
 sudo samba-tool domain provision
-# --realm=$FQDN \
-# --domain=$DOMAIN \
-# --server-role=$SERVER_ROLE \
-# --dns-backend=$DNS_BACKEND \
-# --adminpass=$ADMINISTRATOR_PASSWORD \
-# --use-rfc2307
-# --dns-forwarder=$GOOGLE_DNS \
-# --interactive=no
 
 if [ $? -ne 0 ]; then
     echo "Error al definir provisionamiento de dominio."
@@ -37,7 +29,7 @@ else
     echo "Domain: $DOMAIN"
     echo "Server Role: $SERVER_ROLE"
     echo "DNS backend: $DNS_BACKEND"
-    # echo "DNS forwarder IP address: $GOOGLE_DNS"
+    echo "DNS forwarder IP address: $GOOGLE_DNS"
     echo "Administrator password: $ADMINISTRATOR_PASSWORD"
     echo "No olvides cambiar la contraseña del administrador"
     echo "Comando: sudo samba-tool user setpassword administrator"
