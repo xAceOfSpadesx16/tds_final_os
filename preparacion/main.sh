@@ -47,7 +47,7 @@ sudo unlink /etc/resolv.conf
 echo
 
 # Creando nuevo resolv.conf
-echo "Creando nuevo enlace simbólico de resolv.conf..."
+echo "Creando nuevo archivo resolv.conf..."
 sudo tee /etc/resolv.conf >/dev/null <<EOF
 nameserver $ip
 nameserver $GOOGLE_DNS

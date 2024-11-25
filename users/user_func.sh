@@ -2,45 +2,37 @@
 source trebol.conf
 source utils.sh
 generar_password_random() {
-    # Comandos Utilizados:
-    #     tr: realiza una traducción o eliminación de caracteres en una entrada. (filtrado)
-    #     opciones:
-    #         -d, --delete: elimina los caracteres que no esten especificados.
-    #         -c, --complement: utiliza el conjunto de caracteres complementario (excluyendo el conjunto especificado).
-    #     /dev/urandom: genera una secuencia de datos aleatorios.
-    #     head: muestra las primeras líneas de un archivo o secuencia de entrada.
-    #     opciones:
-    #         -c, --bytes: limita la salida a un número específico de bytes.
+    # Descripción:
+    #     Genera una contraseña aleatoria alfanumérica de exactamente 8 caracteres.
+    #     Asegura que la contraseña cumpla con los siguientes requisitos:
+    #         - Contiene al menos una letra mayúscula.
+    #         - Contiene al menos una letra minúscula.
+    #         - Contiene al menos un número.
+    #
+    # Comandos utilizados:
+    #     /dev/urandom:
+    #         Fuente de datos aleatorios.
+    #     tr:
+    #         Filtra la entrada, dejando únicamente letras (A-Za-z) y números (0-9).
+    #         Opciones:
+    #             -d: elimina caracteres no especificados.
+    #             -c: utiliza el conjunto complementario.
+    #     fold:
+    #         Divide la entrada en líneas de un ancho específico.
+    #         Opciones:
+    #             -w: especifica el número máximo de caracteres por línea.
+    #     grep:
+    #         Filtra líneas basadas en un patrón (regex).
+    #         Opciones:
+    #             -P: permite usar expresiones regulares compatibles con Perl.
+    #             '^.{8}$': asegura que la línea tenga exactamente 8 caracteres.
+    #     head:
+    #         Muestra únicamente la primera línea de la salida.
+    #         Opciones:
+    #             -n: limita la salida al número especificado de líneas.
 
-    tr -dc 'A-Za-z0-9' </dev/urandom | head -c 8
+    tr -dc 'A-Za-z0-9' </dev/urandom | fold -w 8 | grep -P '(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])^.{8}$' | head -n 1
 }
-
-# crear_usuario_linux() {
-# Parametros:
-#     1) username
-# Comandos Utilizados:
-#     useradd: crea un nuevo usuario.
-#     opciones:
-#         -d, --home: especifica el path del directorio home del nuevo usuario.
-#         -m, --create-home: crea el directorio home del usuario.
-#         -U, --user-group: crea un grupo con el mismo nombre del usuario.
-#         -s, --shell: especifica el shell del usuario.
-#         -k, --skel: especifica un directorio de plantilla para el home del usuario.
-#    chpasswd: permite al administrador del sistema cambiar contraseñas de usuarios por lotes.
-
-# local username=$1
-# local password=$(generar_password_random)
-# echo "Creando usuario $username." >&2
-# sudo samba-tool user create "$username" "$password" --home-directory "$DIR_HOME_PATH/$username"
-
-# error=$(check_error $? "Error al crear el usuario $username en el sistema.")
-
-# if [[ $error -eq 1 ]]; then
-#     echo -e "Usuario: $username - Contraseña: $password\n" >>"$DIR_ETC_PATH/demo_linux_users.txt"
-# fi
-
-#registra los usuarios y contraseñas del sistema para fines didacticos
-# }
 
 crear_usuario_samba() {
     # Parámetros:

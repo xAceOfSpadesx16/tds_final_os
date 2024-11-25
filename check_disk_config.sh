@@ -9,12 +9,16 @@ if [ ! -e "$DISCO" ]; then
     echo "Error: El disco $DISCO no existe."
     echo $MENSAJE_ERROR
     exit 1
+else
+    echo "El disco $DISCO existe..."
 fi
 
 if [ ! -b "$DISCO" ]; then
     echo "Error: El disco $DISCO no es un dispositivo de bloque valido."
     echo "Ejecucion abortada, asegurese de que el disco sea un dispositivo de bloque valido."
     exit 1
+else
+    echo "El disco $DISCO es un dispositivo de bloque valido..."
 fi
 
 # Verificar que CANT_PARTICIONES esté en el rango válido
@@ -24,6 +28,8 @@ if [ "$CANT_PARTICIONES" -lt 1 ] || [ "$CANT_PARTICIONES" -gt 4 ]; then
     echo "CANT_PARTICIONES: $CANT_PARTICIONES"
     echo $MENSAJE_ERROR
     exit 1
+else
+    echo "El numero de particiones se encuentra en rango valido..."
 fi
 
 # Verificar que TAMANO_PARTICION sea positivo
@@ -33,6 +39,8 @@ if [ "$TAMANO_PARTICION" -le 0 ]; then
     echo "TAMANO_PARTICION: $TAMANO_PARTICION"
     echo $MENSAJE_ERROR
     exit 1
+else
+    echo "El tamano de las particiones se encuentra en rango valido..."
 fi
 
 # Verificar que el disco tenga suficiente espacio
@@ -53,6 +61,8 @@ if [ "$TAMANO_DISCO_GB" -lt "$ESPACIO_REQUERIDO" ]; then
     echo "TAMANO_DISCO: $TAMANO_DISCO_GB GB"
     echo $MENSAJE_ERROR
     exit 1
+else
+    echo "El disco $DISCO tiene suficiente espacio..."
 fi
 
 # Verificar si el disco tiene sistema de archivos
@@ -73,4 +83,7 @@ if parted -s "$DISCO" print 1 &>/dev/null; then
         exit 1
     fi
 
+else
+    echo "El disco $DISCO no tiene un sistema de archivos..."
+    echo "Posteriormente se crearan las particiones correspondientes..."
 fi

@@ -5,7 +5,16 @@ source trebol.conf
 trap 'sleep 1' DEBUG
 
 # Check de Configuración de Disco a particionar
+echo "Verificando disco $DISCO..."
 sudo bash check_disk_config.sh
+if [ $? -ne 0 ]; then
+    exit 1
+else
+    echo -e "Verificacion de disco $DISCO finalizada.\n"
+fi
+
+# Check de paquetes requeridos
+sudo bash check_pack_req.sh
 if [ $? -ne 0 ]; then
     exit 1
 fi
@@ -15,12 +24,6 @@ sudo bash preparacion/main.sh
 if [ $? -ne 0 ]; then
     echo "Error al preparar el servidor, la instalacion ha sido abortada."
     echo "Checkee el archivo ./preparacion/main.sh y la configuracion en trebol.conf"
-    exit 1
-fi
-
-# Check de paquetes requeridos
-sudo bash check_pack_req.sh
-if [ $? -ne 0 ]; then
     exit 1
 fi
 
