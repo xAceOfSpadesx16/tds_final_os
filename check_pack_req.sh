@@ -26,6 +26,7 @@ echo "A su vez se requieren los siguientes paquetes para configurar Kerberos:"
 echo "krb5-config krb5-user"
 echo
 read -p "¿Desea instalarlos? (s/n): " -n 1 -r respuesta
+echo
 
 # Validar la respuesta con un bucle while
 while [[ "$respuesta" != "s" && "$respuesta" != "n" ]]; do

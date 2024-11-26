@@ -24,7 +24,7 @@ generar_password_random() {
     #     grep:
     #         Filtra líneas basadas en un patrón (regex).
     #         Opciones:
-    #             -P: permite usar expresiones regulares compatibles con Perl.
+    #             -P: permite usar expresiones regulares.
     #             '^.{8}$': asegura que la línea tenga exactamente 8 caracteres.
     #     head:
     #         Muestra únicamente la primera línea de la salida.
@@ -35,25 +35,23 @@ generar_password_random() {
 }
 
 crear_usuario_samba() {
-    # Parámetros:
-    #     1) username
-    # Comandos Utilizados:
-    #     smbpasswd: administra contraseñas para usuarios Samba.
-    #     opciones:
-    #         -a: agrega un nuevo usuario a la base de datos de Samba.
-
     local username=$1
     local manual=$2
     local password=$(generar_password_random)
-    sudo samba-tool user create "$username" "$password" --home-directory "$DIR_HOME_PATH/$username"
+    sudo samba-tool user create "$username" "$password" --home-directory "$DIR_HOME_PATH/$username" >/dev/null
 
     error=$(check_error $? "Error al crear el usuario $username en la BBDD de Samba.")
 
     if [[ $error -eq 0 ]]; then
+        echo "Usuario $username fue creado con exito Samba." >&2
         echo -e "Usuario: $username - Contraseña: $password\n" >>"$DIR_ETC_PATH/demo_samba_users.txt"
         if [[ $manual ]]; then
             echo "La contraseña asignada para su usuario es: $password" >&2
         fi
+
+    else
+        echo "Error al crear el usuario $username en la BBDD de Samba." >&2
+        return 1
 
     fi
 
