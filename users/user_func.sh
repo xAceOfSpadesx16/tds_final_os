@@ -67,7 +67,7 @@ agregar_a_grp() {
     fi
 
     echo "Agregando $username al grupo $group." >&2
-    samba-tool group addmembers "$group" "$username"
+    sudo samba-tool group addmembers "$group" "$username" >/dev/null
     check_error $? "Error al agregar $username al grupo $group"
 }
 
@@ -88,7 +88,7 @@ agregar_a_grp_por_listados() {
 
                 if ! samba-tool group list | grep -qw "$group_name"; then
                     echo "Creando grupo $group_name en el servidor." >&2
-                    samba-tool group add "$group_name"
+                    sudo samba-tool group add "$group_name"
                     check_error $? "Error al crear el grupo $group_name en el servidor."
                 fi
 
