@@ -74,11 +74,20 @@ crear_grp_dirs() {
 crear_home_dir() {
     username=$1
     echo "Creando directorio Home de $username..."
-
     sudo mkdir -m 2700 -p "$DIR_HOME_PATH/$username"
     check_error $? "Error al crear el directorio $DIR_HOME_PATH/$username"
-    sudo chown $username:$SYSTEM_ADMIN_USER "$DIR_HOME_PATH/$username"
+
+    echo "Asignando propietario inicial al directorio Home de $username..."
+    sudo chown "$username:$SYSTEM_ADMIN_USER" "$DIR_HOME_PATH/$username"
     check_error $? "Error al asignar propietario al directorio $DIR_HOME_PATH/$username"
+
+    echo "Copiando skel al directorio Home de $username..."
     sudo cp -rf "$USE_SKEL/"* "$DIR_HOME_PATH/$username"
     check_error $? "Error al copiar skel al directorio $DIR_HOME_PATH/$username"
+
+    echo "Ajustando permisos y propietarios de los archivos y directorios..."
+    sudo find "$DIR_HOME_PATH/$username" -exec chmod 600 {} + -o -type d -exec chmod 700 {} + -exec chown "$username:$SYSTEM_ADMIN_USER" {} +
+    check_error $? "Error al ajustar permisos o propietarios en $DIR_HOME_PATH/$username"
+
+    echo "Directorio Home de $username creado y configurado correctamente."
 }

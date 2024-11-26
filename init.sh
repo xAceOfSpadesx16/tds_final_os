@@ -63,9 +63,9 @@ sudo bash users/auto.sh
 
 echo -e "Creacion de Usuarios finalizada.\n"
 
-# # # Definicion de permisos de arbol y propietarios de directorios
-# echo "Definiendo propietarios y permisos."
+# # Definicion de permisos de arbol y propietarios de directorios
+echo "Definiendo propietarios y permisos."
 
-# sudo bash definicion/own_perms.sh
+sudo bash definicion/own_perms.sh
 
-# echo -e "Definicion de propietarios y permisos finalizada.\n"
+echo -e "Definicion de propietarios y permisos finalizada.\n"
