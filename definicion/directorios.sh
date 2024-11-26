@@ -79,6 +79,6 @@ crear_home_dir() {
     check_error $? "Error al crear el directorio $DIR_HOME_PATH/$username"
     sudo chown $username:$SYSTEM_ADMIN_USER "$DIR_HOME_PATH/$username"
     check_error $? "Error al asignar propietario al directorio $DIR_HOME_PATH/$username"
-    sudo cp -rf "$USE_SKEL/*" "$DIR_HOME_PATH/$username"
+    sudo cp -rf "$USE_SKEL/"* "$DIR_HOME_PATH/$username"
     check_error $? "Error al copiar skel al directorio $DIR_HOME_PATH/$username"
 }
