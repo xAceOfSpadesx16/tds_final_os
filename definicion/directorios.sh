@@ -71,26 +71,83 @@ crear_grp_dirs() {
     done
 }
 
-crear_home_dir() {
-    username=$1
+# ///////////////////////////////////////////////////////////////////////////
+#
+# Funciones de creación de directorios Home
+#
+# ///////////////////////////////////////////////////////////////////////////
+
+crear_directorio_home() {
+    # Crea el directorio home de un usuario con permisos predeterminados.
+    # Argumentos:
+    #     $1: Nombre del usuario para el cual se creará el directorio home.
+    # Comandos Utilizados:
+    #     mkdir: crea directorios.
+    #         opciones:
+    #             -m: establece los permisos iniciales.
+    #             -p: crea los directorios padres si no existen.
+    local username=$1
     echo "Creando directorio Home de $username..."
     sudo mkdir -m 2750 -p "$DIR_HOME_PATH/$username"
     check_error $? "Error al crear el directorio $DIR_HOME_PATH/$username"
+}
 
+asignar_propietario_home() {
+    # Asigna el propietario y grupo al directorio home de un usuario.
+    # Argumentos:
+    #     $1: Nombre del usuario.
+    # Comandos Utilizados:
+    #     chown: cambia el propietario y grupo de un archivo o directorio.
+    local username=$1
     echo "Asignando propietario inicial al directorio Home de $username..."
     sudo chown "$username:$SYSTEM_ADMIN_USER" "$DIR_HOME_PATH/$username"
     check_error $? "Error al asignar propietario al directorio $DIR_HOME_PATH/$username"
+}
 
+copiar_skel_a_home() {
+    # Copia los archivos del directorio SKEL al directorio home del usuario.
+    # Argumentos:
+    #     $1: Nombre del usuario.
+    # Comandos Utilizados:
+    #     cp: copia archivos y directorios.
+    #         opciones:
+    #             -r: copia recursivamente.
+    #             -f: fuerza la copia sobre archivos existentes.
+    local username=$1
     echo "Copiando skel al directorio Home de $username..."
     sudo cp -rf "$USE_SKEL/"* "$DIR_HOME_PATH/$username"
     check_error $? "Error al copiar skel al directorio $DIR_HOME_PATH/$username"
+}
 
-    echo "Ajustando permisos y propietarios de los archivos y directorios..."
+ajustar_permisos_y_propietarios_home() {
+    # Ajusta los permisos y propietarios de los archivos y directorios en un directorio home.
+    # Argumentos:
+    #     $1: Nombre del usuario.
+    # Comandos Utilizados:
+    #     find: busca archivos y directorios para aplicar comandos.
+    #         opciones:
+    #             -type f: selecciona archivos.
+    #             -type d: selecciona directorios.
+    #             -exec: ejecuta un comando sobre los resultados.
+    #     chmod: cambia los permisos.
+    #     chown: cambia el propietario y grupo.
+    local username=$1
+    echo "Ajustando permisos y propietarios de los archivos y directorios del directorio Home..."
     sudo find "$DIR_HOME_PATH/$username" -type f -exec chmod 640 {} + -exec chown "$username:$SYSTEM_ADMIN_USER" {} +
-
-    sudo find "$DIR_HOME_PATH/$username" -type d -exec chmod 750 {} + -exec chown "$username:$SYSTEM_ADMIN_USER" {} +
-
+    sudo find "$DIR_HOME_PATH/$username" -type d -exec chmod 2750 {} + -exec chown "$username:$SYSTEM_ADMIN_USER" {} +
     check_error $? "Error al ajustar permisos o propietarios en $DIR_HOME_PATH/$username"
+}
 
+# Función principal que encapsula la creación y configuración de un directorio home.
+
+crear_home_dir() {
+    # Función principal que encapsula la creación y configuración de un directorio home.
+    # Argumentos:
+    #     $1: Nombre del usuario.
+    local username=$1
+    crear_directorio_home "$username"
+    asignar_propietario_home "$username"
+    copiar_skel_a_home "$username"
+    ajustar_permisos_y_propietarios_home "$username"
     echo "Directorio Home de $username creado y configurado correctamente."
 }

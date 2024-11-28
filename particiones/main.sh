@@ -4,7 +4,8 @@ source particiones/part_func.sh
 
 main() {
     crear_tabla_particiones
-    crear_particiones
+    crear_particion_extendida
+    crear_particiones_logicas
     formatear_particiones
 }
 

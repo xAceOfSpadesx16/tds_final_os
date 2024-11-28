@@ -60,7 +60,7 @@ if [[ "$respuesta" == "s" ]]; then
     sudo DEBIAN_FRONTEND=noninteractive apt install -y -qq krb5-config krb5-user
     echo
     echo "Instalando paquetes requeridos..."
-    sudo apt install -y -q "${missing_packages[@]}"
+    sudo apt install -y -qq "${missing_packages[@]}"
     if [ $? -ne 0 ]; then
         echo "Hubo un error al instalar los paquetes."
         echo "Chequee el log de errores."
