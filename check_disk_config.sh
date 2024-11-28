@@ -1,10 +1,13 @@
 #!/bin/bash
 source trebol.conf
+source particiones/part_func.sh
 
 MENSAJE_ERROR="Ejecucion abortada. Revisar la configuracion en trebol.conf"
 
-# Verificar que el disco existe
-# Si el disco no existe
+# Obtiene los directorios y tamaños definidos
+directorios_y_tamanos=($(obtener_directorios_a_montar))
+
+# Verifica que el disco existe
 if [ ! -e "$DISCO" ]; then
     echo "Error: El disco $DISCO no existe."
     echo $MENSAJE_ERROR
@@ -13,6 +16,7 @@ else
     echo "El disco $DISCO existe..."
 fi
 
+# Verifica que el disco es un dispositivo de bloque válido
 if [ ! -b "$DISCO" ]; then
     echo "Error: El disco $DISCO no es un dispositivo de bloque valido."
     echo "Ejecucion abortada, asegurese de que el disco sea un dispositivo de bloque valido."
@@ -21,52 +25,28 @@ else
     echo "El disco $DISCO es un dispositivo de bloque valido..."
 fi
 
-# Verificar que CANT_PARTICIONES esté en el rango válido
-# Si la cantidad de particiones es menor a 1 o mayor a 4
-if [ "$CANT_PARTICIONES" -lt 1 ] || [ "$CANT_PARTICIONES" -gt 4 ]; then
-    echo "Error: El número de particiones debe estar entre 1 y 4."
-    echo "CANT_PARTICIONES: $CANT_PARTICIONES"
-    echo $MENSAJE_ERROR
-    exit 1
-else
-    echo "El numero de particiones se encuentra en rango valido..."
-fi
+# Calcula el espacio requerido sumando los tamaños de todas las particiones
+ESPACIO_REQUERIDO=0
+for entry in "${directorios_y_tamanos[@]}"; do
+    IFS=":" read -r _ size <<<"$entry"
+    ESPACIO_REQUERIDO=$((ESPACIO_REQUERIDO + size))
+done
 
-# Verificar que TAMANO_PARTICION sea positivo
-# Si TAMANO_PARTICION es menor o igual a 0
-if [ "$TAMANO_PARTICION" -le 0 ]; then
-    echo "Error: El tamaño de las particiones debe ser mayor que 0."
-    echo "TAMANO_PARTICION: $TAMANO_PARTICION"
-    echo $MENSAJE_ERROR
-    exit 1
-else
-    echo "El tamano de las particiones se encuentra en rango valido..."
-fi
-
-# Verificar que el disco tenga suficiente espacio
-# Obtener el tamaño del disco en bytes
-# Opciones: -b, --bytes: muestra el tamaño del disco en bytes
-#           -o, --output: muestra el tamaño del disco en bytes
-#           SIZE: muestra el tamaño del disco
-#tail -n 1: muestra la ultima linea
+# Obtiene el tamaño del disco en GB
 TAMANO_DISCO=$(lsblk -b -o SIZE "$DISCO" | tail -n 1)
-TAMANO_DISCO_GB=$(($TAMANO_DISCO / 1024 / 1024 / 1024))
+TAMANO_DISCO_GB=$((TAMANO_DISCO / 1024 / 1024 / 1024))
 
-# Calcular el espacio requerido para las particiones
-ESPACIO_REQUERIDO=$(($CANT_PARTICIONES * $TAMANO_PARTICION))
-
-# Si el tamaño del disco es menor al espacio requerido
+# Verifica que el disco tenga suficiente espacio
 if [ "$TAMANO_DISCO_GB" -lt "$ESPACIO_REQUERIDO" ]; then
     echo "Error: El disco no tiene suficiente espacio. Requiere $ESPACIO_REQUERIDO GB."
     echo "TAMANO_DISCO: $TAMANO_DISCO_GB GB"
     echo $MENSAJE_ERROR
     exit 1
 else
-    echo "El disco $DISCO tiene suficiente espacio..."
+    echo "El disco $DISCO tiene suficiente espacio para crear las particiones requeridas."
 fi
 
-# Verificar si el disco tiene sistema de archivos
-# Si el disco tiene una particion existente
+# Verifica si el disco tiene particiones existentes
 if parted -s "$DISCO" print 1 &>/dev/null; then
     echo "Advertencia: El disco $DISCO ya tiene al menos una particion."
     echo "¿Desea sobrescribir las particiones existentes y crear nuevas? (s/n)"
@@ -79,10 +59,9 @@ if parted -s "$DISCO" print 1 &>/dev/null; then
 
     if [[ "$overwrite" != "s" ]]; then
         echo "Ejecucion abortada."
-        echo "Es requerido que el disco no tenga un sistema de archivos o sea sobrescrito."
+        echo "Es requerido que el disco no tenga particiones existentes o sea sobrescrito."
         exit 1
     fi
-
 else
     echo "El disco $DISCO no tiene un sistema de archivos..."
     echo "Posteriormente se crearan las particiones correspondientes..."
