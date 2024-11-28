@@ -8,7 +8,7 @@ obtener_directorios_a_montar() {
     # Si el archivo temporal existe y tiene contenido, lo lee
     if [[ -f "$SYNC_DIRS_TMP" && -s "$SYNC_DIRS_TMP" ]]; then
         echo "Leyendo directorios desde $SYNC_DIRS_TMP..." >&2
-        sudo mapfile -t directorios <"$SYNC_DIRS_TMP"
+        mapfile -t directorios <"$SYNC_DIRS_TMP"
         echo "${directorios[@]}"
         return
     fi
