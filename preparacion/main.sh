@@ -1,5 +1,5 @@
 #!/bin/bash
-trap 'sleep 1' DEBUG
+# trap 'sleep 1' DEBUG
 source trebol.conf
 source utils.sh
 

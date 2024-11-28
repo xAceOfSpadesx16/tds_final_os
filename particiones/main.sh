@@ -7,7 +7,6 @@ main() {
     crear_particion_extendida
     crear_particiones_logicas
     formatear_particiones
-    montaje_particiones
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

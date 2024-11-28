@@ -37,7 +37,7 @@ done
 # Actuar según la respuesta
 if [[ "$respuesta" == "s" ]]; then
     echo "Actualizando lista de paquetes..."
-    sudo apt update -q
+    sudo apt update -qq >/dev/null
 
     echo
 
@@ -60,7 +60,7 @@ if [[ "$respuesta" == "s" ]]; then
     sudo DEBIAN_FRONTEND=noninteractive apt install -y -qq krb5-config krb5-user
     echo
     echo "Instalando paquetes requeridos..."
-    sudo apt install -y -qq "${missing_packages[@]}"
+    sudo apt install -y -qq "${missing_packages[@]}" >/dev/null
     if [ $? -ne 0 ]; then
         echo "Hubo un error al instalar los paquetes."
         echo "Chequee el log de errores."
