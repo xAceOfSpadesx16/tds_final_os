@@ -2,7 +2,7 @@
 
 source trebol.conf
 # Agrega un "sleep 1" despues de cada comando ejecutado para mejor debug
-# trap 'sleep 1' DEBUG
+trap 'sleep 1' DEBUG
 
 # Check de Configuración de Disco a particionar
 echo "Verificando disco $DISCO..."

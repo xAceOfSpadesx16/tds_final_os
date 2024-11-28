@@ -57,7 +57,7 @@ if [[ "$respuesta" == "s" ]]; then
 
     echo
     echo "Instalando Kerberos..."
-    sudo DEBIAN_FRONTEND=noninteractive apt install -y -qq krb5-config krb5-user
+    sudo DEBIAN_FRONTEND=noninteractive apt install -y -qq krb5-config krb5-user >/dev/null
     echo
     echo "Instalando paquetes requeridos..."
     sudo apt install -y -qq "${missing_packages[@]}" >/dev/null
