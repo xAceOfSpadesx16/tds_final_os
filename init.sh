@@ -4,6 +4,15 @@ source trebol.conf
 # Agrega un "sleep 1" despues de cada comando ejecutado para mejor debug
 trap 'sleep 1' DEBUG
 
+# Creación de estructura de directorios, definicion de archivos en skel, listas de usuarios.
+echo "Creando estructura de directorios y copiado de archivos necesarios."
+
+sudo bash definicion/main.sh
+
+echo -e "Creacion de estructura de directorios finalizada.\n"
+
+echo
+
 # Check de Configuración de Disco a particionar
 echo "Verificando disco $DISCO..."
 sudo bash check_disk_config.sh
@@ -33,15 +42,6 @@ echo "Iniciando particionado de disco $DISCO."
 sudo bash particiones/main.sh
 
 echo -e "Particionado de disco $DISCO ha finalizado.\n"
-
-# Creación de estructura de directorios, definicion de archivos en skel, listas de usuarios.
-echo "Creando estructura de directorios y copiado de archivos necesarios."
-
-sudo bash definicion/main.sh
-
-echo -e "Creacion de estructura de directorios finalizada.\n"
-
-echo
 
 echo "Montando particiones..."
 sudo bash particiones/montaje.sh

@@ -37,7 +37,7 @@ done
 # Actuar según la respuesta
 if [[ "$respuesta" == "s" ]]; then
     echo "Actualizando lista de paquetes..."
-    sudo apt update -qq >/dev/null
+    sudo apt update -qq >/dev/null 2>/dev/null
 
     echo
 
@@ -57,10 +57,10 @@ if [[ "$respuesta" == "s" ]]; then
 
     echo
     echo "Instalando Kerberos..."
-    sudo DEBIAN_FRONTEND=noninteractive apt install -y -qq krb5-config krb5-user >/dev/null
+    sudo DEBIAN_FRONTEND=noninteractive apt install -y -qq krb5-config krb5-user >/dev/null 2>/dev/null
     echo
     echo "Instalando paquetes requeridos..."
-    sudo apt install -y -qq "${missing_packages[@]}" >/dev/null
+    sudo apt install -y -qq "${missing_packages[@]}" >/dev/null 2>/dev/null
     if [ $? -ne 0 ]; then
         echo "Hubo un error al instalar los paquetes."
         echo "Chequee el log de errores."
