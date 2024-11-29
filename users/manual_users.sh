@@ -1,6 +1,7 @@
 #!/bin/bash
 source users/user_func.sh
 source trebol.conf
+source definicion/directorios.sh
 
 sector_list() {
     # Variables .conf:
@@ -84,8 +85,8 @@ main() {
     #     Obtiene la lista de sectores disponibles.
     #     Solicita por entrada el nombre de usuario.
     #     Solicita por entrada el sector al que se desea agregar el usuario. (lista de sectores disponibles)
-    #     Crea el usuario en el sistema.
     #     Crea el usuario en la base de datos de Samba.
+    #     Crea el home del usuario.
     #     Agrega el usuario al sector principal (listado).
     #     Agrega el usuario al sector elegido (listado).
     #     Agrega el usuario al grupo principal.
@@ -98,23 +99,20 @@ main() {
 
     sector=$(elegir_sector "${sectores_disponibles[@]}")
 
-    crear_usuario_linux "$user"
-    echo "Usuario registrado en el sistema." >&2
-
+    echo "Creando usuario $user en samba..."
     crear_usuario_samba "$user" 1
-    echo "Usuario registrado en la base de datos de Samba." >&2
+
+    echo "Creando home de $user..."
+    crear_home_dir "$user"
 
     agregar_user_a_sector "$user" "$MAIN_GRP"
-    echo "Usuario registrado como usuario de Trebol S.A." >&2
 
     agregar_user_a_sector "$user" "$sector"
-    echo "Usuario registrado en el sector $sector" >&2
 
     agregar_a_grp "$MAIN_GRP" "$user"
-    echo "Usuario agregado a grupo $MAIN_GRP." >&2
 
     agregar_a_grp "$sector" "$user"
-    echo "Usuario agregado a grupo $sector" >&2
+
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

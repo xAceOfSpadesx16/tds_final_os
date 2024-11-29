@@ -49,7 +49,7 @@ echo -e "Montaje de particiones finalizado.\n"
 
 echo
 
-echo "Configurando Samba..."
+echo "Configurando Samba Active Directory..."
 sudo bash samba/main.sh
 echo -e "Configuracion de Samba finalizada.\n"
 
@@ -61,6 +61,8 @@ sudo bash definicion/groups.sh
 echo -e "Definicion de Grupos finalizada.\n"
 
 # # Definicion de nuevo alias para creacion usuarios.
+
+# |||||||||||||||||||||||||||||||||||||||||||
 
 # # Creacion de usuarios definidos en problematica trebol
 echo "Creando usuarios de $empresa"
@@ -75,3 +77,13 @@ echo "Definiendo propietarios y permisos."
 sudo bash definicion/own_perms.sh
 
 echo -e "Definicion de propietarios y permisos finalizada.\n"
+
+# # Definicion de Recursos compartidos
+
+echo "Definiendo recursos compartidos."
+
+sudo bash shared/main.sh
+
+echo -e "Definicion de Recursos compartidos finalizada.\n"
+
+echo "Instalacion finalizada."

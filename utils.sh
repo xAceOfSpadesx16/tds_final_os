@@ -20,3 +20,19 @@ obtener_ip() {
 obtener_red() {
     ip addr show $ADAPTADOR | awk '/inet / {print $2}' | xargs -I{} ipcalc -n {} | awk '/Network/ {print $2}'
 }
+
+input_min_chars() {
+    local mensaje=$1
+    local variable=$2
+    local chars_min=$3
+
+    while true; do
+        read -p "$mensaje" input
+        if [[ ${#input} -ge $chars_min ]]; then
+            eval "$variable='$input'"
+            break
+        else
+            echo "Por favor, ingresa al menos $chars_min caracteres."
+        fi
+    done
+}

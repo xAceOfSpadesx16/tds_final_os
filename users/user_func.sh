@@ -43,7 +43,7 @@ crear_usuario_samba() {
     error=$(check_error $? "Error al crear el usuario $username en la BBDD de Samba.")
 
     if [[ $error -eq 0 ]]; then
-        echo "Usuario $username fue creado con exito Samba." >&2
+        echo "Usuario $username fue creado con exito en la BBDD de Samba." >&2
         echo -e "Usuario: $username - Contraseña: $password\n" >>"$DIR_ETC_PATH/demo_samba_users.txt"
         if [[ $manual ]]; then
             echo "La contraseña asignada para su usuario es: $password" >&2
@@ -116,5 +116,6 @@ agregar_user_a_sector() {
     local sector=$2
     echo "Agregando $username al listado $sector.list" >&2
     echo "$username" >>"$DIR_LISTS_PATH/$sector.list"
+    check_error $? "Error al agregar $username al listado $sector.list"
 
 }
