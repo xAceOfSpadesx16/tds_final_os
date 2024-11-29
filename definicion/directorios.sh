@@ -149,5 +149,6 @@ crear_home_dir() {
     asignar_propietario_home "$username"
     copiar_skel_a_home "$username"
     ajustar_permisos_y_propietarios_home "$username"
+    sudo samba-tool user sethome "$username" "$DIR_HOME_PATH/$username" >/dev/null
     echo "Directorio Home de $username creado y configurado correctamente."
 }

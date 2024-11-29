@@ -38,7 +38,7 @@ crear_usuario_samba() {
     local username=$1
     local manual=$2
     local password=$(generar_password_random)
-    sudo samba-tool user create "$username" "$password" --home-directory "$DIR_HOME_PATH/$username" >/dev/null
+    sudo samba-tool user create "$username" "$password" >/dev/null # --home-directory "$DIR_HOME_PATH/$username"
 
     error=$(check_error $? "Error al crear el usuario $username en la BBDD de Samba.")
 
