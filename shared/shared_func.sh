@@ -110,6 +110,7 @@ crear_shared_home() {
 
 [homes]
     comment = Directorios personales
+    path = $DIR_HOME_PATH
     browseable = no
     read only = no
     valid users = %S
