@@ -16,7 +16,7 @@ echo "No olvides cambiar la contraseña del administrador"
 echo "Comando: sudo samba-tool user setpassword administrator"
 echo
 
-sudo samba-tool domain provision --admin-pass="$ADMINISTRATOR_PASSWORD"
+sudo samba-tool domain provision --adminpass="$ADMINISTRATOR_PASSWORD"
 
 if [ $? -ne 0 ]; then
     echo "Error al definir provisionamiento de dominio."
