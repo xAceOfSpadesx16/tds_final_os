@@ -11,12 +11,12 @@ echo "Domain: $DOMAIN"
 echo "Server Role: $SERVER_ROLE"
 echo "DNS backend: $DNS_BACKEND"
 echo "DNS forwarder IP address: $GOOGLE_DNS"
-echo "Administrator password: $ADMINISTRATOR_PASSWORD"
+echo "Administrator password: $ADMINISTRATOR_PASSWORD (Esta contraseña será utilizada en la configuracion posterior.)"
 echo "No olvides cambiar la contraseña del administrador"
 echo "Comando: sudo samba-tool user setpassword administrator"
 echo
 
-sudo samba-tool domain provision --interactive --adminpass="$ADMINISTRATOR_PASSWORD"
+sudo samba-tool domain provision
 
 if [ $? -ne 0 ]; then
     echo "Error al definir provisionamiento de dominio."
@@ -36,19 +36,6 @@ else
 fi
 echo
 
-#!/bin/bash
-
-echo "Creando zona de búsqueda inversa 18.168.192.in-addr.arpa en el servidor..."
-sudo samba-tool dns zonecreate 127.0.0.1 18.168.192.in-addr.arpa -U administrator --password=$ADMINISTRATOR_PASSWORD 2>/dev/null
-
-echo "Agregando registro A para trebol.local apuntando a 192.168.18.14..."
-sudo samba-tool dns add 127.0.0.1 trebol.local trebol.local A 192.168.18.14 -U administrator --password=$ADMINISTRATOR_PASSWORD 2>/dev/null
-
-echo "Ajustando registro PTR para que 192.168.18.14 apunte a trebol.local..."
-sudo samba-tool dns add 127.0.0.1 18.168.192.in-addr.arpa 14 PTR trebol.local -U administrator --password=$ADMINISTRATOR_PASSWORD 2>/dev/null
-
-echo
-
 echo "Haciendo copia de seguridad de /etc/krb5.conf..."
 sudo mv /etc/krb5.conf /etc/krb5.conf.back
 
@@ -61,6 +48,22 @@ echo
 
 echo "Iniciando el servicio Samba Active Directory Domain Controller..."
 sudo systemctl start samba-ad-dc
+
+echo
+
+echo "Creando zona de búsqueda inversa 18.168.192.in-addr.arpa en el servidor..."
+sudo samba-tool dns zonecreate 127.0.0.1 18.168.192.in-addr.arpa -U administrator --password=$ADMINISTRATOR_PASSWORD 2>/dev/null
+
+echo "Agregando registro A para trebol.local apuntando a 192.168.18.14..."
+sudo samba-tool dns add 127.0.0.1 trebol.local trebol.local A 192.168.18.14 -U administrator --password=$ADMINISTRATOR_PASSWORD 2>/dev/null
+
+echo "Ajustando registro PTR para que 192.168.18.14 apunte a trebol.local..."
+sudo samba-tool dns add 127.0.0.1 18.168.192.in-addr.arpa 14 PTR trebol.local -U administrator --password=$ADMINISTRATOR_PASSWORD 2>/dev/null
+
+echo
+
+echo "Reiniciando el servicio Samba Active Directory Domain Controller..."
+sudo systemctl restart samba-ad-dc
 
 echo
 
