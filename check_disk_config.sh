@@ -1,6 +1,6 @@
 #!/bin/bash
 source trebol.conf
-source particiones/part_func.sh
+source particiones/part_utils.sh
 
 MENSAJE_ERROR="Ejecucion abortada. Revisar la configuracion en trebol.conf"
 
@@ -29,12 +29,12 @@ fi
 ESPACIO_REQUERIDO=0
 for entry in "${directorios_y_tamanos[@]}"; do
     IFS=":" read -r _ size <<<"$entry"
-    ESPACIO_REQUERIDO=$((ESPACIO_REQUERIDO + size))
+    ESPACIO_REQUERIDO=$(($ESPACIO_REQUERIDO + size))
 done
 
 # Obtiene el tamaño del disco en GB
 TAMANO_DISCO=$(lsblk -b -o SIZE "$DISCO" | tail -n 1)
-TAMANO_DISCO_GB=$((TAMANO_DISCO / 1024 / 1024 / 1024))
+TAMANO_DISCO_GB=$(($TAMANO_DISCO / 1024 / 1024 / 1024))
 
 # Verifica que el disco tenga suficiente espacio
 if [ "$TAMANO_DISCO_GB" -lt "$ESPACIO_REQUERIDO" ]; then
