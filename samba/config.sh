@@ -51,22 +51,6 @@ sudo systemctl start samba-ad-dc
 
 echo
 
-# echo "Creando zona de búsqueda inversa 18.168.192.in-addr.arpa en el servidor..."
-# sudo samba-tool dns zonecreate 127.0.0.1 18.168.192.in-addr.arpa -U administrator --password=$ADMINISTRATOR_PASSWORD 2>/dev/null
-
-# echo "Agregando registro A para trebol.local apuntando a 192.168.18.14..."
-# sudo samba-tool dns add 127.0.0.1 trebol.local trebol.local A 192.168.18.14 -U administrator --password=$ADMINISTRATOR_PASSWORD 2>/dev/null
-
-# echo "Ajustando registro PTR para que 192.168.18.14 apunte a trebol.local..."
-# sudo samba-tool dns add 127.0.0.1 18.168.192.in-addr.arpa 14 PTR trebol.local -U administrator --password=$ADMINISTRATOR_PASSWORD 2>/dev/null
-
-# echo
-
-echo "Reiniciando el servicio Samba Active Directory Domain Controller..."
-sudo systemctl restart samba-ad-dc
-
-echo
-
 echo "Verificando el estado del servicio..."
 sudo systemctl status samba-ad-dc --no-pager
 
