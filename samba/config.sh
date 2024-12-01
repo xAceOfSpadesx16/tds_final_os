@@ -25,12 +25,6 @@ if [ $? -ne 0 ]; then
     echo "Ejecuta el comando 'sudo samba-tool domain provision' para definirlo interactivamente"
 else
     echo "Provisionamiento de dominio completado."
-    echo "Realm: $FQDN"
-    echo "Domain: $DOMAIN"
-    echo "Server Role: $SERVER_ROLE"
-    echo "DNS backend: $DNS_BACKEND"
-    echo "DNS forwarder IP address: $GOOGLE_DNS"
-    echo "Administrator password: $ADMINISTRATOR_PASSWORD"
     echo "No olvides cambiar la contraseña del administrador"
     echo "Comando: sudo samba-tool user setpassword administrator"
 fi
