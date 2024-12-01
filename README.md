@@ -77,9 +77,9 @@ El flujo de ejecucion del presente proyecto esta dado por el archivo init.sh alo
 
     - Definicion de hostname.
 
-    - Remocion de linea "127.0.1.1 dc" en caso de existir.
+    - Remocion de linea "127.0.1.1 dc" de /etc/hosts en caso de existir.
 
-    - Definicion de resolucion de nombres local.
+    - Definicion de resolucion de nombres local en /etc/hosts.
 
     - Verificacion de FQDN (Fully Qualified Domain Name).
 
