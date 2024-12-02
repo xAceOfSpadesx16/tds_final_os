@@ -39,7 +39,7 @@ input_opciones() {
             echo "$input"
             return
         else
-            echo "Entrada no válida."
+            echo "Entrada no válida." >&2
         fi
     done
 }

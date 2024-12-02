@@ -115,7 +115,7 @@ agregar_user_a_sector() {
     local username=$1
     local sector=$2
     echo "Agregando $username al listado $sector.list" >&2
-    echo "$username" >>"$DIR_LISTS_PATH/$sector.list"
+    echo -e "\n$username" >>"$DIR_LISTS_PATH/$sector.list"
     check_error $? "Error al agregar $username al listado $sector.list"
 
 }
