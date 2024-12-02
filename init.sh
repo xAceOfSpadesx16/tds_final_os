@@ -82,12 +82,25 @@ sudo bash shared/main.sh
 
 echo -e "Definicion de Recursos compartidos finalizada.\n"
 
+# # Definicion de nuevo archivo de configuracion trebol.conf en directorio /etc/trebol
+echo "Definiendo archivo de configuracion $DIR_ETC_PATH/trebol.conf."
+
+sudo bash definicion/trebol_conf.sh
+
 # # Definicion de nuevo alias para creacion usuarios.
 
-# |||||||||||||||||||||||||||||||||||||||||||
+echo "Definiendo alias y script para creacion de usuarios."
 
+sudo bash users/manual_users.sh
+
+echo
 # # Definicion de nuevo alias para creacion de recursos compartidos.
 
-# ||||||||||||||||||||||||||||||||||||||||||||
+echo "Definiendo alias y script para creacion de recursos compartidos."
 
-echo "Instalacion finalizada."
+sudo bash shared/manual_shared.sh
+
+echo
+echo "////////////////////////////////////"
+echo "     Instalacion finalizada."
+echo "////////////////////////////////////"

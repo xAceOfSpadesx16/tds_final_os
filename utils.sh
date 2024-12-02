@@ -36,3 +36,29 @@ input_min_chars() {
         fi
     done
 }
+
+input_opciones() {
+    local mensaje=$1
+    local opciones_string=$2
+    local por_defecto=${3:-$(echo $opciones_string | awk '{print $1}')}
+
+    IFS=' ' read -r -a opciones <<<"$opciones_string"
+
+    local opciones_separadas
+    IFS='/' opciones_separadas="${opciones[*]}"
+
+    while true; do
+        local prompt="$mensaje ($opciones_separadas) [default:$por_defecto]: "
+        read -p "$prompt" input
+
+        if [[ -z $input ]]; then
+            echo "$por_defecto"
+            return
+        elif [[ " ${opciones[@]} " =~ " $input " ]]; then
+            echo "$input"
+            return
+        else
+            echo "Entrada no válida."
+        fi
+    done
+}

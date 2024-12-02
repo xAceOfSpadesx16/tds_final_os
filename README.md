@@ -16,6 +16,11 @@
 ## <u>Requerimientos</u>:
 - Sistema Operativo - Linux con gestor de paquetes APT.
 - Disco Rigido en blanco o disponible para formatear completamente.
+- Espacio minimo requerido por defecto: 30GB.
+    - 10GB para home.
+    - 5GB para ventas.
+    - 5GB para contabilidad.
+    - 10GB para otros.
 
 ## <u>Objetivos del Trabajo</u>:
 <p style='text-align: justify;'>El trabajo tiene como principal objetivo la creacion y configuracion automatica y desde cero de un Active Directory Domain Controller con Samba y el correspondiente provisionamiento de dominio, haciendo especial enfasis en el dinamismo de la creacion de recursos compartidos y particiones donde seran montados estos recursos.</p>
@@ -207,7 +212,25 @@ El flujo de ejecucion del presente proyecto esta dado por el archivo init.sh alo
         - comment = Area de trabajo: {ventas,contabilidad}
 
 
-- Inclusion de alias en archivo .bashrc del directorio home (administrador del servidor):
-    - Creación manual de usuario de Samba con seleccion de area de trabajo.
+- <b> Creación de archivo de configuración </b>
 
-    - Creación manual de Recurso Compartido. 
+    - Creacion de archivo /etc/trebol/trebol.conf.
+
+    - Insercion de variables a utilizar por scripts.
+        - addsambauser
+        - addshared
+
+
+- <b> Definicion de scripts de creacion de usuarios y creacion de recursos compartidos: </b>
+
+    - Creación manual de usuario de Samba con seleccion de area de trabajo.
+        - Creacion de archivo en /usr/bin/trebol_user.sh.
+        - Insercion de script.
+        - Definicion de permiso de ejecucion.
+        - Definicion de alias en /home/$(whoami)/.bash_aliases.
+
+    - Creación manual de Recurso Compartido.
+        - Creacion de archivo en /usr/bin/trebol_share.sh.
+        - Insercion de script.
+        - Definicion de permiso de ejecucion.
+        - Definicion de alias en /home/$(whoami)/.bash_aliases.
