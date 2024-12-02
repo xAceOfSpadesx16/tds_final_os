@@ -101,6 +101,11 @@ echo "Definiendo alias y script para creacion de recursos compartidos."
 sudo bash shared/manual_shared.sh
 
 echo
+
+echo "Reinicie su terminal mediante source ~/.bashrc para que los alias se vean reflejados."
+
+echo
+
 echo "////////////////////////////////////"
 echo "     Instalacion finalizada."
 echo "////////////////////////////////////"
