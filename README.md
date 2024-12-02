@@ -44,6 +44,7 @@ El flujo de ejecucion del presente proyecto esta dado por el archivo init.sh alo
         - /etc/trebol/sectores
         - /var/trebol
         - /var/trebol/home
+        - /var/trebol/otros
 
     - Copia de listados de personal a /etc/trebol/sectores.
 
@@ -224,13 +225,11 @@ El flujo de ejecucion del presente proyecto esta dado por el archivo init.sh alo
 - <b> Definicion de scripts de creacion de usuarios y creacion de recursos compartidos: </b>
 
     - Creación manual de usuario de Samba con seleccion de area de trabajo.
-        - Creacion de archivo en /usr/bin/trebol_user.sh.
-        - Insercion de script.
+        - Movimiento de archivo en /usr/bin/trebol_user.sh.
         - Definicion de permiso de ejecucion.
-        - Definicion de alias en /home/$(whoami)/.bash_aliases.
+        - Definicion de alias en /home/$SYSTEM_ADMIN_USER/.bash_aliases.
 
     - Creación manual de Recurso Compartido.
-        - Creacion de archivo en /usr/bin/trebol_share.sh.
-        - Insercion de script.
+        - Movimiento de archivo en /usr/bin/trebol_share.sh.
         - Definicion de permiso de ejecucion.
-        - Definicion de alias en /home/$(whoami)/.bash_aliases.
+        - Definicion de alias en /home/$SYSTEM_ADMIN_USER/.bash_aliases.
