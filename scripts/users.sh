@@ -131,13 +131,27 @@ agregar_a_grp() {
         return 1
     fi
 
+    if ! samba-tool group list | grep -qw "$group"; then
+        echo "Error: El grupo $group no existe en Samba." >&2
+        echo "Luego de crearlo, agregue $username al grupo mediante el comando:" >&2
+        echo "sudo samba-tool group addmembers <grupo> $username"
+        echo "Para ver la lista de grupos existentes, ejecute:" >&2
+        echo "sudo samba-tool group list"
+        return 1
+    fi
+
     echo "Agregando $username al grupo $group." >&2
     sudo samba-tool group addmembers "$group" "$username" >/dev/null
     check_error $? "Error al agregar $username al grupo $group"
 }
 
 main() {
-    local sectores_disponibles=$((sector_list))
+    local sectores_disponibles=($(sector_list))
+
+    if [[ ${#sectores_disponibles[@]} -eq 0 ]]; then
+        echo "Error: No hay sectores disponibles." >&2
+        exit 1
+    fi
 
     local user
     read -p "Defina un nombre de Usuario: " user
