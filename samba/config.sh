@@ -43,7 +43,7 @@ echo "Domain: $DOMAIN"
 echo "Server Role: $SERVER_ROLE"
 echo "DNS backend: $DNS_BACKEND"
 echo "DNS forwarder IP address: $GOOGLE_DNS"
-echo "Administrator password: $ADMINISTRATOR_PASSWORD (Esta contraseña será utilizada en la configuracion posterior.)"
+echo "Administrator password: $ADMINISTRATOR_PASSWORD"
 echo "No olvides cambiar la contraseña del administrador"
 echo "Comando: sudo samba-tool user setpassword administrator"
 echo
