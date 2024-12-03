@@ -1,9 +1,18 @@
 source definicion/directorios.sh
 
 obtener_directorios_a_montar() {
-    # Devuelve un array con los directorios y tamaños para montaje.
-    # Si el archivo temporal existe y no está vacío, usa su contenido.
-    # De lo contrario, genera los directorios y los guarda en el archivo temporal.
+    # Descripción:
+    #     Esta función obtiene una lista de directorios y tamaños para montar, ya sea leyendo de un archivo temporal
+    #     si existe y tiene contenido, o generándolos dinámicamente a partir de una lista estática y areas de trabajo.
+    #     Los directorios generados se guardan en un archivo temporal para futuras consultas.
+    #
+    # Comandos Utilizados:
+    #     mapfile: lee el contenido de un archivo en un array.
+    #         opciones:
+    #             -t: elimina los saltos de línea al final de cada línea leída.
+    #     sudo printf: imprime el contenido al archivo con privilegios de superusuario.
+    #         opciones:
+    #             - %s\n: imprime cada elemento en el array en una nueva línea.
 
     # Si el archivo temporal existe y tiene contenido, lo lee
     if [[ -f "$SYNC_DIRS_TMP" && -s "$SYNC_DIRS_TMP" ]]; then

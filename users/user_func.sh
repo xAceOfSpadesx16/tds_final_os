@@ -35,6 +35,27 @@ generar_password_random() {
 }
 
 crear_usuario_samba() {
+    # Descripción:
+    # Esta función crea un usuario en la base de datos de Samba y genera una contraseña aleatoria.
+    # Adicionalmente, guarda los detalles del usuario en un archivo de texto para referencia.
+    #
+    # Argumentos:
+    #     $1: Nombre del usuario (obligatorio).
+    #     $2: Indicador de salida manual de la contraseña (opcional, cualquier valor para activarlo).
+    #
+    # Comandos Utilizados:
+    # - samba-tool: Utilidad para la gestión de usuarios y recursos en un controlador de dominio Samba.
+    #     subcomando:
+    #         user create: Crea un usuario en la base de datos de Samba.
+    #     opciones:
+    #         "$username": Nombre del usuario a crear.
+    #         "$password": Contraseña asignada al usuario.
+    # - generar_password_random: Función (definida externamente) que genera una contraseña aleatoria.
+    # - check_error: Función (definida externamente) que verifica el estado de salida de comandos y gestiona mensajes de errores.
+    # - echo: Imprime mensajes en la terminal o los redirige a archivos.
+    # - >>: Redirige la salida de un comando al final de un archivo.
+    # - if [[ ]]; then ... else: Estructura condicional utilizada para validar operaciones y manejar errores.
+
     local username=$1
     local manual=$2
     local password=$(generar_password_random)
@@ -58,6 +79,24 @@ crear_usuario_samba() {
 }
 
 agregar_a_grp() {
+    # Descripción:
+    # Esta función agrega un usuario a un grupo específico en la base de datos de Samba.
+    # Antes de realizar la operación, valida que tanto el grupo como el usuario hayan sido especificados.
+    #
+    # Argumentos:
+    #     $1: Nombre del grupo (obligatorio).
+    #     $2: Nombre del usuario (obligatorio).
+    #
+    # Comandos Utilizados:
+    # - [[ ]]: Estructura condicional para verificar condiciones.
+    #     -z: Comprueba si una cadena es vacía.
+    # - sudo samba-tool group addmembers:
+    #     - Agrega uno o más usuarios a un grupo en Samba.
+    #     opciones:
+    #         "$group": Nombre del grupo al que se desea agregar el usuario.
+    #         "$username": Nombre del usuario que será agregado al grupo.
+    # - check_error: Función (definida externamente) que verifica el estado de salida de comandos y maneja errores.
+
     local group=$1
     local username=$2
 
@@ -72,6 +111,30 @@ agregar_a_grp() {
 }
 
 agregar_a_grp_por_listados() {
+
+    # Descripción:
+    # Esta función asigna un usuario a grupos definidos en archivos de listado (.list).
+    # Si el grupo no existe en Samba, lo crea antes de agregar al usuario.
+    #
+    # Argumentos:
+    #     $1: Ruta al directorio que contiene los archivos de listado (.list) (obligatorio).
+    #     $2: Nombre del usuario a asignar a los grupos (obligatorio).
+    #
+    # Comandos Utilizados:
+    # - [[ ]]: Verifica condiciones.
+    #     -d: Comprueba si es un directorio.
+    #     -f: Comprueba si un archivo existe y es un archivo regular.
+    #     !: Niega la condición.
+    # - for: Itera sobre una lista de archivos.
+    # - grep: Busca patrones en un archivo.
+    #     -q: No muestra salida, solo devuelve el código de estado.
+    #     ^$username$: Patrón que coincide con líneas que contienen únicamente el nombre del usuario.
+    # - basename: Obtiene el nombre base de un archivo, eliminando prefijos o extensiones.
+    # - sudo samba-tool group list: Lista los grupos existentes en Samba.
+    # - sudo samba-tool group add: Crea un grupo en Samba.
+    # - agregar_a_grp: Función (definida externamente) que agrega un usuario a un grupo.
+    # - check_error: Función (definida externamente) que verifica y maneja errores de comandos.
+
     local dir_path="$1"
     local username="$2"
 

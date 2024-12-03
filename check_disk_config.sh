@@ -63,6 +63,6 @@ if parted -s "$DISCO" print 1 &>/dev/null; then
         exit 1
     fi
 else
-    echo "El disco $DISCO no tiene un sistema de archivos..."
+    echo "El disco $DISCO no tiene particiones definidas..."
     echo "Posteriormente se crearan las particiones correspondientes..."
 fi

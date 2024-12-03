@@ -1,4 +1,51 @@
 #!/bin/bash
+
+# Script: Verificación e instalación de paquetes requeridos con configuración automática de Kerberos
+# Descripción:
+# Este script verifica la existencia de paquetes requeridos en el sistema.
+# Si faltan paquetes, ofrece la opción de instalarlos automáticamente, configurando también Kerberos.
+#
+# 1. Verifica la existencia de los paquetes requeridos.
+# 2. Si no faltan paquetes, muestra un mensaje y finaliza.
+# 3. Si faltan, los lista y solicita al usuario autorización para instalarlos.
+# 4. Si el usuario acepta:
+#     - Actualiza la lista de paquetes.
+#     - Configura Kerberos automáticamente usando `debconf-set-selections`.
+#     - Instala los paquetes faltantes y Kerberos.
+# 5. Si el usuario rechaza, finaliza indicando que los paquetes son necesarios.
+#
+# Comandos utilizados:
+# - `source`:
+#     - Carga las variables de configuración definidas en `trebol.conf`.
+# - `dpkg -l`:
+#     - Lista los paquetes instalados en el sistema.
+#     opciones:
+#         `^ii  $package`: Busca líneas que indiquen que el paquete está instalado.
+# - `read`:
+#     - Captura la entrada del usuario.
+#     opciones:
+#         `-p`: Muestra un mensaje antes de capturar la entrada.
+#         `-n`: Limita la captura al número de caracteres especificados.
+# - `sudo apt update`:
+#     - Actualiza la lista de paquetes disponibles.
+#     opciones:
+#         `-qq`: Reduce la salida para mostrar solo errores críticos.
+# - `debconf-set-selections`:
+#     - Define configuraciones predeterminadas para paquetes que requieren interacción durante la instalación.
+# - `sudo apt install`:
+#     - Instala los paquetes requeridos.
+#     opciones:
+#         `-y`: Responde "sí" automáticamente a las solicitudes de confirmación.
+#         `-qq`: Minimiza la salida.
+# - `exit`:
+#     - Finaliza el script con un código de estado.
+# - `printf`:
+#     - Imprime los elementos de un array en formato de lista.
+# - `DEBIAN_FRONTEND`:
+#     - Variable de entorno utilizada por `apt` y otros gestores de paquetes para definir el modo de interacción.
+#     valores comunes:
+#         `noninteractive`: Ejecuta el proceso de instalación sin pedir interacción del usuario. Ideal para scripts automatizados.
+
 source trebol.conf
 
 # Definicion de Array para paquetes faltantes
@@ -44,14 +91,12 @@ if [[ "$respuesta" == "s" ]]; then
     echo "Instalando paquetes requeridos..."
 
     # Definiendo solicitudes de Kerberos mediante debconf-set-selections
-    # Se utiliza DEBIAN_FRONTEND=noninteractive para evitar la interaccion con el usuario durante la instalacion
-    # Por lo tanto se utiliza este para definir la informacion requerida por el paquete.
     echo "Definiendo Realm, Server y Admin Server en Kerberos mediante debconf..."
-    echo "REALM=$FQDN"
+    echo "REALM=$REALM"
     echo "SERVER=$NOMBRE_CONTROLLER.$NOMBRE_DOMINIO.$EXTENSION_DOMINIO"
     echo "ADMIN_SERVER=$NOMBRE_CONTROLLER.$NOMBRE_DOMINIO.$EXTENSION_DOMINIO"
 
-    echo "krb5-config krb5-config/default_realm string $FQDN" | sudo debconf-set-selections
+    echo "krb5-config krb5-config/default_realm string $REALM" | sudo debconf-set-selections
     echo "krb5-config krb5-config/kerberos_servers string $NOMBRE_CONTROLLER.$NOMBRE_DOMINIO.$EXTENSION_DOMINIO" | sudo debconf-set-selections
     echo "krb5-config krb5-config/admin_server string $NOMBRE_CONTROLLER.$NOMBRE_DOMINIO.$EXTENSION_DOMINIO" | sudo debconf-set-selections
 

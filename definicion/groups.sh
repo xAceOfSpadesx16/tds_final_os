@@ -23,6 +23,21 @@ obtener_grupos() {
 }
 
 crear_groups() {
+    # Descripción:
+    #     Crea grupos en el controlador de dominio utilizando Samba, basándose en los nombres obtenidos por la función obtener_grupos.
+    #
+    # Variables Utilizadas:
+    #     Ninguna directamente en esta función (depende de obtener_grupos).
+    #
+    # Comandos Utilizados:
+    #     samba-tool: herramienta para gestionar objetos en el dominio Samba.
+    #         subcomandos:
+    #             - group list: lista los grupos existentes en el dominio.
+    #             - group add: agrega un nuevo grupo al dominio.
+    #     grep: busca coincidencias en las líneas de salida.
+    #         opciones:
+    #             - -q: modo silencioso, no muestra salida.
+    #             - -w: coincide solo con palabras completas.
 
     local grps=($(obtener_grupos))
     for i in "${grps[@]}"; do

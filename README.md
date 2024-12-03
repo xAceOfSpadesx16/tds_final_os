@@ -186,6 +186,7 @@ El flujo de ejecucion del presente proyecto esta dado por el archivo init.sh alo
         - /etc/trebol/sectores
         - /var/trebol
         - /var/trebol/home
+        - /var/trebol/otros
     
     - Definicion de propietarios y permisos de areas de trabajo.
         - /var/trebol/ventas

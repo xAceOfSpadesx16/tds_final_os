@@ -1,5 +1,24 @@
 #!/bin/bash
 
+# Descripción:
+#     Este script verifica la existencia de un archivo de configuración (`CONF_ALIAS_PATH`) y lo crea si no existe.
+#     Posteriormente, escribe en el archivo configuraciones predefinidas tomadas del archivo `trebol.conf`.
+
+#
+# Comandos Utilizados:
+#     source: carga las variables y configuraciones definidas en un archivo externo.
+#     if ([ ! -f ]): evalúa si un archivo no existe en el sistema.
+#         opciones:
+#             - -f: comprueba si un archivo existe y es un archivo regular.
+#     sudo touch: crea un archivo vacío con permisos de superusuario.
+#     cat: imprime contenido en la salida estándar o lo pasa a otros comandos.
+#         opciones:
+#             - <<EOF: define un bloque de texto que se termina al encontrar la marca `EOF`.
+#     tee: copia el contenido recibido en un archivo, reemplazándolo.
+#     exit: finaliza la ejecución del script con un código de salida.
+#         opciones:
+#             - [número]: define el código de salida (0 por éxito, 1 por error).
+
 source trebol.conf
 
 if [ ! -f "$CONF_ALIAS_PATH" ]; then

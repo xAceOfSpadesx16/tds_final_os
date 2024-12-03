@@ -1,4 +1,41 @@
 #!/bin/bash
+
+# Descripción:
+#     Este script configura el hostname y la resolución de nombres en un servidor.
+#     Realiza las siguientes acciones:
+#     1. Define el hostname utilizando `hostnamectl`.
+#     2. Limpia el archivo `/etc/hosts` de entradas antiguas del hostname.
+#     3. Agrega una nueva línea al archivo `/etc/hosts` con la IP y el nombre de dominio completo (FQDN).
+#     4. Verifica el FQDN usando el comando `hostname -f` y la resolución de nombres mediante `ping`.
+#     5. Deshabilita `systemd-resolved` y elimina el enlace simbólico a `/etc/resolv.conf`.
+#     6. Crea un nuevo archivo `/etc/resolv.conf` con configuraciones de DNS y lo hace inmutable.
+
+#
+# Comandos Utilizados:
+#     sudo hostnamectl set-hostname: define el hostname del sistema.
+#     sudo sed: edita archivos de texto usando expresiones regulares.
+#         opciones:
+#             - -i: edita el archivo en el lugar (sin crear un archivo de salida).
+#             - "/127\.0\.1\.1\s\+$NOMBRE_CONTROLLER/d": elimina líneas con la dirección 127.0.1.1 seguida del nombre del controlador.
+#     grep: busca cadenas de texto dentro de archivos.
+#         opciones:
+#             - -qF: busca la cadena exacta sin mostrar salida (modo silencioso).
+#     sudo tee: lee desde la entrada estándar y escribe en archivos con privilegios de superusuario.
+#     hostname -f: muestra el nombre completo del host (FQDN).
+#     ping: prueba la conectividad de red con otro dispositivo.
+#         opciones:
+#             - -c2: realiza 2 intentos de ping.
+#     sudo systemctl disable --now systemd-resolved: desactiva el servicio `systemd-resolved` inmediatamente.
+#     sudo unlink: elimina un enlace simbólico.
+#     sudo tee /etc/resolv.conf: crea o reemplaza el archivo `/etc/resolv.conf` con la configuración de DNS.
+#         contenido:
+#             - nameserver $ip: define el servidor DNS a la IP proporcionada.
+#             - nameserver $GOOGLE_DNS: agrega el servidor DNS de Google.
+#             - search $NOMBRE_DOMINIO.$EXTENSION_DOMINIO: establece el dominio de búsqueda para la resolución de nombres.
+#     sudo chattr +i: hace inmutable un archivo, evitando su modificación.
+#         opciones:
+#             - +i: establece el atributo inmutable en el archivo.
+
 trap 'sleep 1' DEBUG
 source trebol.conf
 source utils.sh
